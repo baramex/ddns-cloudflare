@@ -40,8 +40,7 @@ function cloudflareRequest(method, url, data, params) {
         method,
         url: `https://api.cloudflare.com/client/v4/${url}`,
         headers: {
-            'X-Auth-Key': process.env.CLOUDFLARE_API_KEY,
-            'X-Auth-Email': process.env.CLOUDFLARE_EMAIL,
+            'Authorization': 'Bearer ' + process.env.CLOUDFLARE_API_KEY,
             'Content-Type': 'application/json'
         },
         data,
