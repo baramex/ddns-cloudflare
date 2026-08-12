@@ -8,7 +8,7 @@ const job = schedule.scheduleJob('*/15 * * * *', async function () {
     const ip = await getIp();
     if (oldIp && oldIp !== ip) {
         console.log('IP changed!', ip);
-        updateCloudflareIPs(ip, oldIp);
+        await updateCloudflareIPs(ip, oldIp);
         oldIp = ip;
     }
 });
