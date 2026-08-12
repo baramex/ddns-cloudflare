@@ -2,18 +2,18 @@ require('dotenv').config();
 const { default: axios } = require('axios');
 const schedule = require('node-schedule');
 
-var oldIp = '';
+var oldIp = process.env.oldIp;
 
 const job = schedule.scheduleJob('*/15 * * * *', async function () {
     const ip = await getIp();
     if (oldIp && oldIp !== ip) {
         console.log('IP changed!', ip);
-        updateCloudflareIPs(ip);
+        updateCloudflareIPs(ip, oldIp);
         oldIp = ip;
     }
 });
 
-function updateCloudflareIPs(ip) {
+function updateCloudflareIPs(ip, oldIp) {
     const zones = await cloudflareRequest("GET", "zones");
         if (!zones) {
             return;
@@ -58,7 +58,10 @@ async function getIp() {
     return (await axios.get('https://api.ipify.org?format=json')).data.ip;
 }
 
+if(!oldIp) {
+    updateCloudflareIPs(ip, oldIp);
+}
+
 getIp().then(ip => {
     oldIp = ip;
-    updateCloudflareIPs(ip);
 });
