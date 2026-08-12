@@ -2,7 +2,7 @@ require('dotenv').config();
 const { default: axios } = require('axios');
 const schedule = require('node-schedule');
 
-var oldIp = process.env.oldIp;
+var oldIp = process.env.OLD_IP;
 
 const job = schedule.scheduleJob('*/15 * * * *', async function () {
     const ip = await getIp();
