@@ -8,7 +8,13 @@ const job = schedule.scheduleJob('*/15 * * * *', async function () {
     const ip = await getIp();
     if (oldIp && oldIp !== ip) {
         console.log('IP changed!', ip);
-        const zones = await cloudflareRequest("GET", "zones");
+        updateCloudflareIPs(ip);
+        oldIp = ip;
+    }
+});
+
+function updateCloudflareIPs(ip) {
+    const zones = await cloudflareRequest("GET", "zones");
         if (!zones) {
             return;
         }
@@ -31,9 +37,7 @@ const job = schedule.scheduleJob('*/15 * * * *', async function () {
             }
             await cloudflareRequest("POST", `zones/${zone.id}/dns_records/batch`, { patches });
         }
-        oldIp = ip;
-    }
-});
+}
 
 function cloudflareRequest(method, url, data, params) {
     return axios({
@@ -56,4 +60,5 @@ async function getIp() {
 
 getIp().then(ip => {
     oldIp = ip;
+    updateCloudflareIPs(ip);
 });
