@@ -13,7 +13,7 @@ const job = schedule.scheduleJob('*/15 * * * *', async function () {
     }
 });
 
-function updateCloudflareIPs(ip, oldIp) {
+async function updateCloudflareIPs(ip, oldIp) {
     const zones = await cloudflareRequest("GET", "zones");
         if (!zones) {
             return;
