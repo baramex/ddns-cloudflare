@@ -58,7 +58,7 @@ async function getIp() {
     return (await axios.get('https://api.ipify.org?format=json')).data.ip;
 }
 
-if(!oldIp) {
+if(oldIp) {
     updateCloudflareIPs(ip, oldIp);
 }
 
